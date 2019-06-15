@@ -20,22 +20,64 @@
         },
         "virtualMachineName": {
             "type": "string"
+            "defaultValue": "AZVM"
+            "metadata": {
+                "description": "Add VM with naming convention as AZVM*"
+            }
         },
         "osDiskType": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "2016-Datacenter",
+            "allowedValues": [
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "2016-Nano-Server",
+                "2016-Datacenter-with-Containers",
+                "2016-Datacenter",
+                "2019-Datacenter"
+                ],
+            "metadata": {
+                "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version."
+            }
         },
         "virtualMachineSize": {
-            "type": "string"
-        },
+                "type": "string",
+                "allowedValues": [
+                Basic_A0, 
+                Basic_A1, 
+                Basic_A2, 
+                Basic_A3, 
+                Basic_A4, 
+                Standard_A0, 
+                Standard_A1, 
+                Standard_A2, 
+                Standard_A3, 
+                Standard_A4, 
+                Standard_A5, 
+                Standard_A6, 
+                Standard_A7, 
+                Standard_A8, 
+                Standard_A9, 
+                Standard_A10, 
+                Standard_A11, 
+                Standard_A1_v2, 
+                Standard_A2_v2, 
+                Standard_A4_v2
+                ],
+            "metadata": {
+                "description": "Select VM vmSize."
+            }
+            },
         "adminUsername": {
-            "type": "string"
-        },
+                "type": "string"
+            },
         "adminPassword": {
-            "type": "secureString"
-        },
+                "type": "secureString"
+            },
         "diagnosticsStorageAccountName": {
             "type": "string"
-        }
+            }
     },
     "variables": {
         "vnetId": "[parameters('virtualNetworkId')]",
