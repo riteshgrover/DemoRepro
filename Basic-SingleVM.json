@@ -1,0 +1,109 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "templatestorageType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "storagePrefix": {
+      "type": "string",
+      "minLength": 3,
+      "defaultValue": "storagename"
+    },
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "vnetName"
+    },
+    "vnetSubnet1Name": {
+      "type": "string",
+      "minLength": 3,
+      "defaultValue": "Subnet1"
+    },
+    "vnetSubnet2Name": {
+      "type": "string",
+      "minLength": 3,
+      "defaultValue": "Subnet2"
+    },
+    "vnetSubnet1Prefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/24"
+    },
+    "vnetSubnet2Prefix": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/24"
+    },
+    "vnetPrefix": {
+      "type": "string",
+      "defaultValue" :  "10.0.0.0/16"
+    }
+  },
+  "variables": {
+    "vnet-templatePrefix": "[parameters('vnetPrefix')]",
+    "vnet-templateSubnet1Name": "[parameters('vnetSubnet1Name')]",
+    "vnet-templateSubnet1Prefix": "[parameters('vnetSubnet1Prefix')]",
+    "vnet-templateSubnet2Name": "[parameters('vnetSubnet2Name')]",
+    "vnet-templateSubnet2Prefix": "[parameters('vnetSubnet2Prefix')]",
+    "templatestorageName": "[concat(parameters('storagePrefix'), uniqueString(resourceGroup().id))]"
+
+
+  },
+  "resources": [
+    {
+      "name": "[parameters('vnetName')]",
+      "type": "Microsoft.Network/virtualNetworks",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-30",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "[parameters('vnetName')]"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('vnet-templatePrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('vnet-templateSubnet1Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnet-templateSubnet1Prefix')]"
+            }
+          },
+          {
+            "name": "[variables('vnet-templateSubnet2Name')]",
+            "properties": {
+              "addressPrefix": "[variables('vnet-templateSubnet2Prefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "[variables('templatestorageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-01-01",
+      "sku": {
+        "name": "[parameters('templatestorageType')]"
+      },
+      "dependsOn": [ ],
+      "tags": {
+        "displayName": "[variables('templatestorageName')]"
+      },
+      "kind": "Storage"
+    }
+       
+  ],
+  "outputs": {
+
+  }
+}
